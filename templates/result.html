@@ -4,6 +4,10 @@
     <title>Pitch Recognition Trainer by FM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             background-color: #111;
@@ -12,8 +16,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            justify-content: start;
+            min-height: 100vh;
+            overflow-x: hidden;
             text-align: center;
         }
 
@@ -26,17 +31,19 @@
             font-weight: bold;
             letter-spacing: 1px;
             border-bottom: 2px solid #333;
-            position: absolute;
+            position: fixed;
             top: 0;
             color: #1abc9c;
+            z-index: 10;
         }
 
         .scoreboard {
-            position: absolute;
+            position: fixed;
             top: 15px;
             right: 20px;
             font-size: 16px;
             text-align: right;
+            z-index: 10;
         }
 
         .fire-emoji {
@@ -50,8 +57,8 @@
         }
 
         .logo-result {
-            margin-top: 100px;
-            margin-bottom: 20px;
+            margin-top: 80px;
+            margin-bottom: 10px;
         }
 
         .logo-result img {
@@ -64,6 +71,7 @@
             border-radius: 12px;
             background-color: #1c1c1c;
             box-shadow: 0 0 15px rgba(0, 255, 150, 0.2);
+            max-width: 90vw;
         }
 
         h1 {
