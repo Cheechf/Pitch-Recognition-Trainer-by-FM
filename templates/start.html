@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pitch Recognition Trainer by FM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background-color: #111;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1600px;
+            padding: 0 20px;
+            gap: 50px;
+        }
+
+        .player-img {
+            height: 360px;
+            width: auto;
+            border-radius: 12px;
+            opacity: 0.7;
+            box-shadow: 0 0 15px rgba(26, 188, 156, 0.4);
+        }
+
+        .center-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            max-width: 600px;
+        }
+
+        .logo-img {
+            width: 320px;
+            height: auto;
+            margin-bottom: 30px;
+            object-fit: contain;
+        }
+
+        .title {
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 12px #1abc9c;
+        }
+
+        .start-btn {
+            padding: 18px 36px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #1abc9c;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .start-btn:hover {
+            background-color: #16a085;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <img src="{{ url_for('static', filename='images/player1.png') }}" class="player-img" alt="Player 1">
+
+        <div class="center-content">
+            <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo" class="logo-img">
+            <div class="title">Pitch Recognition Trainer by FM</div>
+            <form action="/pitch">
+                <button class="start-btn">Start At-Bat</button>
+            </form>
+        </div>
+
+        <img src="{{ url_for('static', filename='images/player2.png') }}" class="player-img" alt="Player 2">
+    </div>
+
+</body>
+</html>

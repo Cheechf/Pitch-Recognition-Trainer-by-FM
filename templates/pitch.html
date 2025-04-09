@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pitch Trainer by FM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background-color: #111;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            padding: 15px;
+            background-color: #222;
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #333;
+        }
+
+        video {
+            width: 100%;
+            max-height: 45vh;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .scoreboard {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 16px;
+            text-align: right;
+        }
+
+        .fire-emoji {
+            animation: fireBounce 1s infinite alternate;
+            display: inline-block;
+        }
+
+        @keyframes fireBounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-3px); }
+        }
+
+        .centered-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+        }
+
+        h3 {
+            margin-bottom: 5px;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 16px;
+            font-size: 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .fastball { background-color: #c0392b; color: white; }
+        .changeup { background-color: #8e44ad; color: white; }
+        .slider   { background-color: #2980b9; color: white; }
+        .curveball { background-color: #27ae60; color: white; }
+        .swing { background-color: #f1c40f; color: black; }
+        .take  { background-color: #7f8c8d; color: white; }
+
+        #submitBtn {
+            background-color: #1abc9c;
+            color: white;
+            font-weight: bold;
+            padding: 12px 20px;
+            margin-top: 8px;
+        }
+
+        p {
+            margin: 4px;
+        }
+    </style>
+
+    <!-- Sound FX -->
+    <audio id="rightSound" src="{{ url_for('static', filename='sounds/cash.mp3') }}"></audio>
+    <audio id="wrongSound" src="{{ url_for('static', filename='sounds/buzzer.mp3') }}"></audio>
+
+    <script>
+        function setPitch(pitch) {
+            document.getElementById("pitch_guess").value = pitch;
+            document.getElementById("pitchLabel").innerText = "Pitch Selected: " + pitch;
+        }
+
+        function setDecision(decision) {
+            document.getElementById("swing_take").value = decision;
+            document.getElementById("decisionLabel").innerText = "Decision: " + decision;
+        }
+    </script>
+</head>
+<body>
+
+    <header>Pitch Trainer by FM</header>
+
+    <!-- Score + Streak Display -->
+    <div class="scoreboard">
+        Score: {{ score }}/{{ total }}<br>
+        Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
+    </div>
+
+    <!-- Pitch Video -->
+    <video autoplay muted>
+        <source src="{{ url_for('static', filename='videos/' + pitch['video']) }}" type="video/mp4">
+    </video>
+
+    <!-- Pitch Guess Form -->
+    <form action="/result" method="POST" class="centered-section">
+        <input type="hidden" id="pitch_guess" name="pitch_guess">
+        <input type="hidden" id="swing_take" name="swing_take">
+        <input type="hidden" name="correct_pitch" value="{{ pitch['pitch_type'] }}">
+        <input type="hidden" name="ball_or_strike" value="{{ pitch['ball_or_strike'] }}">
+
+        <h3>What pitch was it?</h3>
+        <div class="button-row">
+            <button type="button" class="fastball" onclick="setPitch('Fastball')">Fastball</button>
+            <button type="button" class="changeup" onclick="setPitch('Changeup')">Changeup</button>
+            <button type="button" class="slider" onclick="setPitch('Slider')">Slider</button>
+            <button type="button" class="curveball" onclick="setPitch('Curveball')">Curveball</button>
+        </div>
+        <p id="pitchLabel"></p>
+
+        <h3>Swing or Take?</h3>
+        <div class="button-row">
+            <button type="button" class="swing" onclick="setDecision('Swing')">Swing</button>
+            <button type="button" class="take" onclick="setDecision('Take')">Take</button>
+        </div>
+        <p id="decisionLabel"></p>
+
+        <button type="submit" id="submitBtn">Submit Guess</button>
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pitch Trainer - Leaderboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background-color: #111;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        header {
+            width: 100%;
+            padding: 15px;
+            background-color: #222;
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #333;
+            position: fixed;
+            top: 0;
+            text-align: center;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            color: #1abc9c;
+        }
+
+        tr:nth-child(even) {
+            background-color: #1c1c1c;
+        }
+
+        tr:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <header>Pitch Trainer Leaderboard</header>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Record</th>
+            <th>AVG</th>
+        </tr>
+        {% for player in leaderboard %}
+        <tr>
+            <td>{{ player.name }}</td>
+            <td>{{ player.score }}/{{ player.total }}</td>
+            <td>{{ player.avg_str }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
