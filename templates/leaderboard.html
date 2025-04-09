@@ -24,6 +24,7 @@
             position: fixed;
             top: 0;
             text-align: center;
+            color: #1abc9c;
         }
 
         table {
@@ -50,6 +51,27 @@
         tr:hover {
             background-color: #333;
         }
+
+        .restart-form {
+            margin-top: 40px;
+        }
+
+        .restart-form button {
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: background-color 0.2s ease;
+        }
+
+        .restart-form button:hover {
+            background-color: #16a085;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +92,10 @@
         </tr>
         {% endfor %}
     </table>
+
+    <form action="/" method="get" class="restart-form">
+        <button type="submit">🔁 Restart At-Bat</button>
+    </form>
 
 </body>
 </html>
