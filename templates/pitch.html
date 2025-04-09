@@ -32,6 +32,20 @@
             border-bottom: 2px solid #333;
         }
 
+        .logo-container {
+            position: absolute;
+            top: 100px;
+            left: 5%;
+            z-index: 1;
+        }
+
+        .logo-container img {
+            max-width: 180px;
+            width: 100%;
+            height: auto;
+            opacity: 0.15;
+        }
+
         .video-wrapper {
             position: relative;
             width: 95vw;
@@ -155,6 +169,11 @@
     <div class="scoreboard">
         Score: {{ score }}/{{ total }}<br>
         Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
+    </div>
+
+    <!-- FM Logo Display -->
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo">
     </div>
 
     <!-- Responsive Streamable Embed -->
