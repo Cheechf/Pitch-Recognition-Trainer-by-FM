@@ -207,10 +207,8 @@
     {% if mode == "game" %}
       {% if hit_type %}
         <div class="info"><strong>HIT:</strong> {{ hit_type }}</div>
-      {% elif correct_swing and not thumbs_up %}
-        <div class="info"><strong>FOUL BALL</strong></div>
-      {% elif not correct_swing and not thumbs_up %}
-        <div class="info"><strong>STRIKE</strong></div>
+      {% elif foul_ball %}
+        <div class="info"><strong>Foul Ball</strong></div>
       {% endif %}
 
       <div class="diamond-wrapper">
