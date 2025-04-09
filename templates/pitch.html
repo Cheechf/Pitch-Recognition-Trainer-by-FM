@@ -7,9 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -47,10 +45,17 @@
     }
 
     .game-scoreboard {
-      margin-top: 6px;
+      position: fixed;
+      top: 70px;
+      left: 15px;
+      background-color: #1c1c1c;
+      border: 1px solid #1abc9c;
+      border-radius: 10px;
+      padding: 10px 12px;
       font-size: 13px;
-      color: #1abc9c;
-      text-align: center;
+      z-index: 12;
+      box-shadow: 0 0 10px rgba(26,188,156,0.3);
+      color: white;
     }
 
     .fire-emoji {
@@ -68,7 +73,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding-top: 75px;
+      padding-top: 100px;
       height: 100vh;
     }
 
@@ -175,6 +180,7 @@
 
       .game-scoreboard {
         font-size: 12px;
+        top: 65px;
       }
     }
   </style>
@@ -202,19 +208,20 @@
   </script>
 </head>
 <body>
-  <header>
-    Pitch Recognition Trainer by FM
-    {% if mode == "game" %}
-    <div class="game-scoreboard">
-      Inning: {{ session['inning'] }} | Outs: {{ session['outs'] }} | Count: {{ session['balls'] }}-{{ session['strikes'] }} | Runs: {{ session['runs'] }}
-    </div>
-    {% endif %}
-  </header>
+
+  <header>Pitch Recognition Trainer by FM</header>
 
   <div class="scoreboard">
     Score: {{ score }}/{{ total }}<br />
     Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
   </div>
+
+  {% if mode == "game" %}
+  <div class="game-scoreboard">
+    Inning: {{ inning }} | Outs: {{ outs }}<br>
+    Count: {{ balls }}-{{ strikes }} | Runs: {{ runs }}
+  </div>
+  {% endif %}
 
   <div class="main-container">
     <div class="logo-container">
