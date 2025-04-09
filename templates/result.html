@@ -103,12 +103,6 @@
       background-color: #16a085;
     }
 
-    .game-info {
-      margin-top: 25px;
-      font-size: 15px;
-      color: #1abc9c;
-    }
-
     .diamond-wrapper {
       margin-top: 30px;
       position: relative;
@@ -154,6 +148,20 @@
       100% { transform: translateY(-6px); }
     }
 
+    .mini-scoreboard {
+      position: fixed;
+      top: 70px;
+      left: 15px;
+      background-color: #1c1c1c;
+      border: 1px solid #1abc9c;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 13px;
+      z-index: 12;
+      box-shadow: 0 0 10px rgba(26,188,156,0.3);
+      color: white;
+    }
+
     @media (max-width: 768px) {
       header { font-size: 20px; }
       .scoreboard { font-size: 12px; }
@@ -171,6 +179,15 @@
     Score: {{ score }}/{{ total }}<br />
     Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
   </div>
+
+  {% if mode == "game" %}
+  <div class="mini-scoreboard">
+    <div><strong>Inning:</strong> {{ inning }}</div>
+    <div><strong>Outs:</strong> {{ outs }}</div>
+    <div><strong>Count:</strong> {{ balls }}-{{ strikes }}</div>
+    <div><strong>Runs:</strong> {{ runs }}</div>
+  </div>
+  {% endif %}
 
   <div class="logo-result">
     <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo">
@@ -191,12 +208,6 @@
       {% if hit_type %}
         <div class="info"><strong>HIT:</strong> {{ hit_type }}</div>
       {% endif %}
-
-      <div class="game-info">
-        Inning: {{ inning }} | Outs: {{ outs }}<br>
-        Count: {{ balls }}-{{ strikes }}<br>
-        Runs: {{ runs }}
-      </div>
 
       <div class="diamond-wrapper">
         <div class="diamond">
