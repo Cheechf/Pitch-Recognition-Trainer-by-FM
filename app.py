@@ -103,24 +103,34 @@ def result():
                         hit_type = "Home Run"
                         runners, runs = advance_runners(runners, 4, runs)
                         hits += 1
+                        balls = 0
+                        strikes = 0
                     elif reaction_time <= 1.0:
                         hit_type = "Triple"
                         runners, runs = advance_runners(runners, 3, runs)
                         hits += 1
+                        balls = 0
+                        strikes = 0
                     elif reaction_time <= 1.5:
                         hit_type = "Double"
                         runners, runs = advance_runners(runners, 2, runs)
                         hits += 1
+                        balls = 0
+                        strikes = 0
                     elif reaction_time <= 2.0:
                         hit_type = "Single"
                         runners, runs = advance_runners(runners, 1, runs)
                         hits += 1
+                        balls = 0
+                        strikes = 0
                     else:
                         strikes += 1
                 else:
+                    # foul ball
                     if strikes < 1:
                         strikes += 1
             else:
+                # swing at a ball = strike
                 strikes += 1
 
         if strikes >= 2:
