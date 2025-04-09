@@ -7,9 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -68,6 +66,12 @@
     .logo-container img {
       width: 80px;
       margin: 10px 0;
+    }
+
+    .game-info {
+      font-size: 14px;
+      color: #1abc9c;
+      margin-bottom: 10px;
     }
 
     .video-wrapper {
@@ -202,6 +206,13 @@
     <div class="logo-container">
       <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo">
     </div>
+
+    {% if mode == "game" %}
+    <div class="game-info">
+      Inning: {{ session['inning'] }} | Outs: {{ session['outs'] }}<br>
+      Count: {{ session['balls'] }}-{{ session['strikes'] }} | Runs: {{ session['runs'] }}
+    </div>
+    {% endif %}
 
     <div class="video-wrapper">
       <iframe id="pitchVideo" src="{{ pitch['embed_url'] }}" allowfullscreen></iframe>
