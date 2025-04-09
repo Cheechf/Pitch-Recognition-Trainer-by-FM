@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Pitch Recognition Trainer by FM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
+            padding: 0;
             background-color: #111;
             color: white;
             font-family: 'Orbitron', sans-serif;
@@ -25,21 +32,29 @@
             border-bottom: 2px solid #333;
         }
 
-        iframe {
-            width: 95%;
+        .video-wrapper {
+            position: relative;
+            width: 95vw;
             max-width: 1080px;
-            height: 600px;
-            margin: 20px auto 30px auto;
-            border: none;
+            aspect-ratio: 16 / 9;
+            margin: 20px auto;
             border-radius: 12px;
+            overflow: hidden;
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         .scoreboard {
             position: absolute;
             top: 15px;
             right: 20px;
-            font-size: 16px;
+            font-size: 15px;
             text-align: right;
         }
 
@@ -58,11 +73,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 5px;
+            width: 100%;
+            padding: 10px;
         }
 
         h3 {
             margin-bottom: 5px;
+            text-align: center;
         }
 
         .button-row {
@@ -71,6 +88,7 @@
             justify-content: center;
             gap: 10px;
             margin-bottom: 10px;
+            max-width: 95vw;
         }
 
         button {
@@ -126,14 +144,15 @@
 
     <header>Pitch Trainer by FM</header>
 
-    <!-- Score + Streak Display -->
     <div class="scoreboard">
         Score: {{ score }}/{{ total }}<br>
         Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
     </div>
 
-    <!-- Embedded Streamable Video -->
-    <iframe id="pitchVideo" src="{{ pitch['embed_url'] }}" allowfullscreen></iframe>
+    <!-- Responsive Streamable Embed -->
+    <div class="video-wrapper">
+        <iframe src="{{ pitch['embed_url'] }}" allowfullscreen></iframe>
+    </div>
 
     <!-- Pitch Guess Form -->
     <form action="/result" method="POST" class="centered-section">
