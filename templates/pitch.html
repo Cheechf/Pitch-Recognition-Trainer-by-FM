@@ -26,10 +26,13 @@
         }
 
         iframe {
-            width: 100%;
-            max-height: 45vh;
-            margin-bottom: 10px;
+            width: 95%;
+            max-width: 1080px;
+            height: 600px;
+            margin: 20px auto 30px auto;
             border: none;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
         }
 
         .scoreboard {
@@ -129,7 +132,7 @@
         Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
     </div>
 
-    <!-- Embedded Google Drive Video -->
+    <!-- Embedded Streamable Video -->
     <iframe id="pitchVideo" src="{{ pitch['embed_url'] }}" allowfullscreen></iframe>
 
     <!-- Pitch Guess Form -->
