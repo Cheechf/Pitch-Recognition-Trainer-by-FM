@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Game Summary - Pitch Trainer by FM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  <style>
+    body {
+      margin: 0;
+      background-color: #111;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    header {
+      width: 100%;
+      padding: 15px;
+      background-color: #222;
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #333;
+      position: absolute;
+      top: 0;
+      text-align: center;
+      color: #1abc9c;
+    }
+
+    .logo {
+      margin-top: 100px;
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      width: 220px;
+      height: auto;
+    }
+
+    .summary-box {
+      background-color: #1c1c1c;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 150, 0.2);
+      max-width: 90vw;
+    }
+
+    h2 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .stats {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    .restart-btn {
+      margin-top: 20px;
+      padding: 14px 28px;
+      font-size: 18px;
+      background-color: #1abc9c;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      transition: 0.2s ease;
+    }
+
+    .restart-btn:hover {
+      background-color: #16a085;
+    }
+
+    @media (max-width: 768px) {
+      h2 { font-size: 26px; }
+      .stats { font-size: 16px; }
+      .logo img { width: 180px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>Pitch Recognition Trainer by FM</header>
+
+  <div class="logo">
+    <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo">
+  </div>
+
+  <div class="summary-box">
+    <h2>Game Over</h2>
+    <div class="stats">Innings Played: <strong>7</strong></div>
+    <div class="stats">Total Runs Scored: <strong>{{ runs }}</strong></div>
+    <div class="stats">Total Outs: <strong>{{ outs_total }}</strong></div>
+    <div class="stats">Hits: <strong>{{ hits }}</strong></div>
+    <div class="stats">Batting AVG: <strong>{{ avg }}</strong></div>
+
+    <form action="/">
+      <button type="submit" class="restart-btn">Restart Game</button>
+    </form>
+  </div>
+
+</body>
+</html>
