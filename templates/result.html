@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pitch Trainer - Result</title>
+    <title>Pitch Recognition Trainer by FM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
     <style>
         body {
@@ -28,6 +28,7 @@
             border-bottom: 2px solid #333;
             position: absolute;
             top: 0;
+            color: #1abc9c;
         }
 
         .scoreboard {
@@ -48,8 +49,17 @@
             100% { transform: translateY(-3px); }
         }
 
+        .logo-result {
+            margin-top: 100px;
+            margin-bottom: 20px;
+        }
+
+        .logo-result img {
+            width: 160px;
+            height: auto;
+        }
+
         .result-box {
-            margin-top: 80px;
             padding: 30px 40px;
             border-radius: 12px;
             background-color: #1c1c1c;
@@ -90,11 +100,16 @@
 </head>
 <body onload="playSound()">
 
-    <header>Pitch Trainer by FM</header>
+    <header>Pitch Recognition Trainer by FM</header>
 
     <div class="scoreboard">
         Score: {{ score }}/{{ total }}<br>
         Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
+    </div>
+
+    <!-- FM Logo Above Result -->
+    <div class="logo-result">
+        <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo">
     </div>
 
     <div class="result-box">
