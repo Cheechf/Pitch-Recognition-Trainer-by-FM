@@ -138,6 +138,14 @@
             document.getElementById("swing_take").value = decision;
             document.getElementById("decisionLabel").innerText = "Decision: " + decision;
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(() => {
+                const iframe = document.getElementById('pitchVideo');
+                iframe.style.pointerEvents = "none";
+                iframe.style.opacity = 0.3;
+            }, 4500); // Disable after 4.5s
+        });
     </script>
 </head>
 <body>
@@ -151,7 +159,7 @@
 
     <!-- Responsive Streamable Embed -->
     <div class="video-wrapper">
-        <iframe src="{{ pitch['embed_url'] }}" allowfullscreen></iframe>
+        <iframe id="pitchVideo" src="{{ pitch['embed_url'] }}" allowfullscreen></iframe>
     </div>
 
     <!-- Pitch Guess Form -->
