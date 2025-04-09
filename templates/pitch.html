@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <title>Pitch Recognition Trainer by FM</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
     <style>
         * {
             box-sizing: border-box;
@@ -19,31 +21,34 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: start;
             min-height: 100vh;
+            padding-top: 80px;
             text-align: center;
-            overflow-x: hidden;
         }
 
         header {
             width: 100%;
-            padding: 15px;
+            padding: 15px 10px;
             background-color: #222;
-            font-size: 5vw;
-            max-font-size: 26px;
+            text-align: center;
+            font-size: 22px;
             font-weight: bold;
             letter-spacing: 1px;
             border-bottom: 2px solid #333;
             color: #1abc9c;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
         }
 
         .scoreboard {
-            position: absolute;
+            position: fixed;
             top: 15px;
-            right: 20px;
-            font-size: 3.5vw;
-            max-font-size: 16px;
+            right: 15px;
+            font-size: 14px;
             text-align: right;
+            z-index: 10;
         }
 
         .fire-emoji {
@@ -57,7 +62,7 @@
         }
 
         .logo-container {
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .logo-container img {
@@ -66,19 +71,21 @@
             height: auto;
         }
 
-        .video-wrapper {
+        .responsive-embed {
             position: relative;
             width: 90vw;
-            max-width: 1080px;
-            aspect-ratio: 16 / 9;
+            max-width: 960px;
             margin: 20px auto;
-            border-radius: 12px;
+            padding-bottom: 56.25%; /* 16:9 ratio */
+            height: 0;
             overflow: hidden;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.6);
         }
 
-        .video-wrapper iframe {
+        .responsive-embed iframe {
             position: absolute;
+            top: 0; left: 0;
             width: 100%;
             height: 100%;
             border: none;
@@ -89,14 +96,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 100%;
             padding: 10px;
+            width: 100%;
         }
 
         h3 {
-            margin-bottom: 5px;
-            font-size: 5vw;
-            max-font-size: 22px;
+            margin: 10px 0 5px;
+            font-size: 18px;
         }
 
         .button-row {
@@ -105,17 +111,17 @@
             justify-content: center;
             gap: 10px;
             margin-bottom: 10px;
-            max-width: 95vw;
+            max-width: 90vw;
         }
 
         button {
             padding: 10px 16px;
-            font-size: 4vw;
-            max-font-size: 16px;
+            font-size: 14px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             transition: transform 0.2s ease;
+            font-family: 'Orbitron', sans-serif;
         }
 
         button:hover {
@@ -133,21 +139,31 @@
             background-color: #1abc9c;
             color: white;
             font-weight: bold;
-            padding: 14px 28px;
-            margin-top: 8px;
-            font-size: 4.5vw;
-            max-font-size: 18px;
+            padding: 14px 24px;
+            margin-top: 10px;
+            font-size: 16px;
         }
 
         p {
             margin: 4px;
-            font-size: 4vw;
-            max-font-size: 16px;
+            font-size: 14px;
         }
 
         @media (min-width: 768px) {
-            header, .scoreboard, h3, button, #submitBtn, p {
-                font-size: initial;
+            h3 {
+                font-size: 20px;
+            }
+
+            button {
+                font-size: 16px;
+            }
+
+            #submitBtn {
+                font-size: 18px;
+            }
+
+            .scoreboard {
+                font-size: 16px;
             }
         }
     </style>
@@ -167,12 +183,12 @@
             document.getElementById("decisionLabel").innerText = "Decision: " + decision;
         }
 
+        // Disable interaction after first play
         document.addEventListener('DOMContentLoaded', function () {
             setTimeout(() => {
                 const iframe = document.getElementById('pitchVideo');
                 iframe.style.pointerEvents = "none";
-                iframe.style.opacity = 0.3;
-            }, 4500); // Lock video after 4.5 seconds
+            }, 4500); // lock out rewatch
         });
     </script>
 </head>
@@ -185,13 +201,12 @@
         Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
     </div>
 
-    <!-- FM Logo Display -->
     <div class="logo-container">
         <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo">
     </div>
 
-    <!-- Responsive Streamable Embed -->
-    <div class="video-wrapper">
+    <!-- Video Embed -->
+    <div class="responsive-embed">
         <iframe id="pitchVideo" src="{{ pitch['embed_url'] }}" allowfullscreen></iframe>
     </div>
 
