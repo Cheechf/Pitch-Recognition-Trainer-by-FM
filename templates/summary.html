@@ -3,6 +3,7 @@
 <head>
     <title>Pitch Trainer - Summary</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             margin: 0;
@@ -31,11 +32,12 @@
         }
 
         .summary-box {
-            margin-top: 80px;
+            margin-top: 100px;
             padding: 30px 40px;
             border-radius: 12px;
             background-color: #1c1c1c;
             box-shadow: 0 0 15px rgba(0, 255, 150, 0.2);
+            max-width: 90%;
         }
 
         .summary-box h2 {
@@ -49,10 +51,11 @@
             border-radius: 6px;
             border: none;
             width: 200px;
+            margin-bottom: 10px;
         }
 
         button {
-            margin-top: 15px;
+            margin-top: 12px;
             padding: 12px 24px;
             font-size: 16px;
             background-color: #1abc9c;
@@ -65,11 +68,20 @@
         button:hover {
             background-color: #16a085;
         }
+
+        .retry-btn {
+            margin-top: 20px;
+            background-color: #3498db;
+        }
+
+        .retry-btn:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
 
-    <header>Pitch Trainer by FM</header>
+    <header>Pitch Recogntion Trainer by FM</header>
 
     <div class="summary-box">
         <h2>Final Score</h2>
@@ -81,6 +93,10 @@
             <input type="text" name="name" required>
             <br>
             <button type="submit">Submit to Leaderboard</button>
+        </form>
+
+        <form action="/" method="get">
+            <button type="submit" class="retry-btn">🔁 Retry Session</button>
         </form>
     </div>
 
