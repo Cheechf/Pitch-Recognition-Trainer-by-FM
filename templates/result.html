@@ -1,173 +1,229 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Pitch Recognition Trainer by FM</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; }
+  <meta charset="UTF-8" />
+  <title>Pitch Recognition Trainer by FM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  <style>
+    * { box-sizing: border-box; }
 
-        body {
-            margin: 0;
-            background-color: #111;
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: start;
-            min-height: 100vh;
-            text-align: center;
-            padding-top: 90px;
-        }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      text-align: center;
+    }
 
-        header {
-            width: 100%;
-            padding: 15px;
-            background-color: #222;
-            font-size: 26px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            border-bottom: 2px solid #333;
-            position: fixed;
-            top: 0;
-            left: 0;
-            color: #1abc9c;
-            z-index: 10;
-            text-align: center;
-        }
+    header {
+      width: 100%;
+      padding: 15px;
+      background-color: #222;
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #333;
+      position: fixed;
+      top: 0;
+      color: #1abc9c;
+      z-index: 10;
+    }
 
-        .scoreboard {
-            position: fixed;
-            top: 15px;
-            right: 20px;
-            font-size: 16px;
-            text-align: right;
-            z-index: 10;
-        }
+    .scoreboard {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      font-size: 14px;
+      text-align: right;
+      z-index: 10;
+    }
 
-        .fire-emoji {
-            animation: fireBounce 1s infinite alternate;
-            display: inline-block;
-        }
+    .fire-emoji {
+      animation: fireBounce 1s infinite alternate;
+      display: inline-block;
+    }
 
-        @keyframes fireBounce {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-3px); }
-        }
+    @keyframes fireBounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-3px); }
+    }
 
-        .logo-result {
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
+    .logo-result {
+      margin-top: 100px;
+      margin-bottom: 20px;
+    }
 
-        .logo-result img {
-            width: 240px;
-            height: auto;
-        }
+    .logo-result img {
+      width: 240px;
+      height: auto;
+    }
 
-        .result-box {
-            padding: 30px 40px;
-            border-radius: 12px;
-            background-color: #1c1c1c;
-            box-shadow: 0 0 15px rgba(0, 255, 150, 0.2);
-            max-width: 90vw;
-        }
+    .result-box {
+      padding: 30px 40px;
+      border-radius: 12px;
+      background-color: #1c1c1c;
+      box-shadow: 0 0 15px rgba(0, 255, 150, 0.2);
+      max-width: 90vw;
+      margin: 0 auto;
+    }
 
-        h1 {
-            font-size: 42px;
-            margin-bottom: 15px;
-        }
+    h1 {
+      font-size: 42px;
+      margin-bottom: 15px;
+    }
 
-        .thumbs {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
+    .thumbs {
+      font-size: 80px;
+      margin-bottom: 20px;
+    }
 
-        .info {
-            font-size: 18px;
-            margin-bottom: 8px;
-        }
+    .info {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
 
-        .next-btn {
-            margin-top: 20px;
-            padding: 14px 28px;
-            font-size: 18px;
-            background-color: #1abc9c;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-        }
+    .next-btn {
+      margin-top: 20px;
+      padding: 14px 28px;
+      font-size: 18px;
+      background-color: #1abc9c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+    }
 
-        .next-btn:hover {
-            background-color: #16a085;
-        }
+    .next-btn:hover {
+      background-color: #16a085;
+    }
 
-        .game-info {
-            margin-top: 25px;
-            font-size: 16px;
-            color: #1abc9c;
-        }
-    </style>
+    .game-info {
+      margin-top: 25px;
+      font-size: 15px;
+      color: #1abc9c;
+    }
+
+    .diamond-wrapper {
+      margin-top: 30px;
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .diamond {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: rotate(45deg);
+      border: 2px solid #1abc9c;
+      border-radius: 8px;
+    }
+
+    .base {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: #222;
+      border: 2px solid #1abc9c;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .home   { top: 75%; left: 35%; }
+    .first  { top: 50%; left: 85%; }
+    .second { top: 0%;   left: 35%; }
+    .third  { top: 50%; left: -15%; }
+
+    .runner {
+      font-size: 18px;
+      animation: bounce 1s infinite alternate;
+    }
+
+    @keyframes bounce {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-6px); }
+    }
+
+    @media (max-width: 768px) {
+      header { font-size: 20px; }
+      .scoreboard { font-size: 12px; }
+      .logo-result img { width: 200px; }
+      h1 { font-size: 36px; }
+      .info { font-size: 16px; }
+    }
+  </style>
 </head>
 <body onload="playSound()">
 
-    <header>Pitch Recognition Trainer by FM</header>
+  <header>Pitch Recognition Trainer by FM</header>
 
-    <div class="scoreboard">
-        Score: {{ score }}/{{ total }}<br>
-        Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
+  <div class="scoreboard">
+    Score: {{ score }}/{{ total }}<br />
+    Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
+  </div>
+
+  <div class="logo-result">
+    <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo">
+  </div>
+
+  <div class="result-box">
+    <div class="thumbs">
+      {% if thumbs_up %} 👍 {% else %} 👎 {% endif %}
     </div>
 
-    <div class="logo-result">
-        <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo">
-    </div>
+    <h1>{{ 'Correct!' if thumbs_up else 'Incorrect' }}</h1>
 
-    <div class="result-box">
-        <div class="thumbs">
-            {% if thumbs_up %}
-                👍
-            {% else %}
-                👎
-            {% endif %}
+    <div class="info">Pitch Type: <strong>{{ correct_pitch }}</strong></div>
+    <div class="info">It was a <strong>{{ correct_zone }}</strong></div>
+    <div class="info">You guessed: <strong>{{ user_guess }}</strong> | <strong>{{ user_decision }}</strong></div>
+
+    {% if mode == "game" %}
+      {% if hit_type %}
+        <div class="info"><strong>HIT:</strong> {{ hit_type }}</div>
+      {% endif %}
+
+      <div class="game-info">
+        Inning: {{ inning }} | Outs: {{ outs }}<br>
+        Count: {{ balls }}-{{ strikes }}<br>
+        Runs: {{ runs }}
+      </div>
+
+      <div class="diamond-wrapper">
+        <div class="diamond">
+          <div class="base home"></div>
+          <div class="base first">{% if runners[0] %}<div class="runner">🟢</div>{% endif %}</div>
+          <div class="base second">{% if runners[1] %}<div class="runner">🟢</div>{% endif %}</div>
+          <div class="base third">{% if runners[2] %}<div class="runner">🟢</div>{% endif %}</div>
         </div>
+      </div>
+    {% endif %}
 
-        <h1>{{ 'Correct!' if thumbs_up else 'Incorrect' }}</h1>
+    <form action="/pitch">
+      <button class="next-btn">See Next Pitch</button>
+    </form>
+  </div>
 
-        <div class="info">Pitch Type: <strong>{{ correct_pitch }}</strong></div>
-        <div class="info">It was a <strong>{{ correct_zone }}</strong></div>
-        <div class="info">You guessed: <strong>{{ user_guess }}</strong> | <strong>{{ user_decision }}</strong></div>
+  <audio id="rightSound" src="{{ url_for('static', filename='sounds/cash.mp3') }}"></audio>
+  <audio id="wrongSound" src="{{ url_for('static', filename='sounds/buzzer.mp3') }}"></audio>
 
-        {% if mode == "game" %}
-            {% if hit_type %}
-                <div class="info"><strong>HIT:</strong> {{ hit_type }}</div>
-            {% endif %}
-            <div class="game-info">
-                Inning: {{ inning }} | Outs: {{ outs }}<br>
-                Count: {{ balls }}-{{ strikes }}<br>
-                Runs: {{ runs }}
-            </div>
-        {% endif %}
-
-        <form action="/pitch">
-            <button class="next-btn">See Next Pitch</button>
-        </form>
-    </div>
-
-    <audio id="rightSound" src="{{ url_for('static', filename='sounds/cash.mp3') }}"></audio>
-    <audio id="wrongSound" src="{{ url_for('static', filename='sounds/buzzer.mp3') }}"></audio>
-
-    <script>
-        function playSound() {
-            {% if thumbs_up %}
-                document.getElementById('rightSound').play();
-            {% else %}
-                document.getElementById('wrongSound').play();
-            {% endif %}
-        }
-    </script>
-
+  <script>
+    function playSound() {
+      {% if thumbs_up %}
+        document.getElementById('rightSound').play();
+      {% else %}
+        document.getElementById('wrongSound').play();
+      {% endif %}
+    }
+  </script>
 </body>
 </html>
