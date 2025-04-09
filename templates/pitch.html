@@ -1,259 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Pitch Recognition Trainer by FM</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Pitch Recognition Trainer by FM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="icon"
+    type="image/x-icon"
+    href="{{ url_for('static', filename='favicon.ico') }}"
+  />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+    header {
+      width: 100%;
+      padding: 12px 10px;
+      background-color: #222;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #333;
+      color: #1abc9c;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
 
-        html, body {
-            margin: 0;
-            padding: 0;
-            background-color: #111;
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-            height: 100vh;
-            overflow: hidden;
-        }
+    .scoreboard {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      font-size: 14px;
+      text-align: right;
+      z-index: 11;
+    }
 
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 60px;
-        }
+    .fire-emoji {
+      animation: fireBounce 1s infinite alternate;
+      display: inline-block;
+    }
 
-        header {
-            width: 100%;
-            padding: 12px 10px;
-            background-color: #222;
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            border-bottom: 2px solid #333;
-            color: #1abc9c;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 10;
-        }
+    @keyframes fireBounce {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-3px);
+      }
+    }
 
-        .scoreboard {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            font-size: 14px;
-            text-align: right;
-            z-index: 11;
-        }
+    .logo-container {
+      margin-top: 55px;
+      margin-bottom: 10px;
+    }
 
-        .fire-emoji {
-            animation: fireBounce 1s infinite alternate;
-            display: inline-block;
-        }
+    .logo-container img {
+      width: 20vw;
+      max-width: 90px;
+      height: auto;
+    }
 
-        @keyframes fireBounce {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-3px); }
-        }
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: calc(100vh - 60px);
+      padding-top: 10px;
+      gap: 10px;
+    }
 
-        .logo-container {
-            margin-top: 5px;
-        }
+    .responsive-embed {
+      position: relative;
+      width: 80vw;
+      max-width: 720px;
+      padding-bottom: 45%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+    }
 
-        .logo-container img {
-            width: 20vw;
-            max-width: 100px;
-            height: auto;
-        }
+    .responsive-embed iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
 
-        .main-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            flex: 1;
-            width: 100%;
-            max-width: 1000px;
-        }
+    form.centered-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 720px;
+    }
 
-        .responsive-embed {
-            position: relative;
-            width: 80vw;
-            max-width: 720px;
-            padding-bottom: 45%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 0 12px rgba(0,0,0,0.6);
-        }
+    h3 {
+      margin: 5px 0;
+      font-size: 16px;
+    }
 
-        .responsive-embed iframe {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
 
-        form.centered-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 720px;
-            margin-top: 10px;
-        }
+    button {
+      padding: 8px 14px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      font-family: 'Orbitron', sans-serif;
+    }
 
-        h3 {
-            margin: 5px 0;
-            font-size: 16px;
-        }
+    button:hover {
+      transform: scale(1.05);
+    }
 
-        .button-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
+    .fastball {
+      background-color: #c0392b;
+      color: white;
+    }
 
-        button {
-            padding: 8px 14px;
-            font-size: 14px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            font-family: 'Orbitron', sans-serif;
-        }
+    .changeup {
+      background-color: #8e44ad;
+      color: white;
+    }
 
-        button:hover {
-            transform: scale(1.05);
-        }
+    .slider {
+      background-color: #2980b9;
+      color: white;
+    }
 
-        .fastball { background-color: #c0392b; color: white; }
-        .changeup { background-color: #8e44ad; color: white; }
-        .slider   { background-color: #2980b9; color: white; }
-        .curveball { background-color: #27ae60; color: white; }
-        .swing { background-color: #f1c40f; color: black; }
-        .take  { background-color: #7f8c8d; color: white; }
+    .curveball {
+      background-color: #27ae60;
+      color: white;
+    }
 
-        #submitBtn {
-            background-color: #1abc9c;
-            color: white;
-            font-weight: bold;
-            padding: 12px 20px;
-            font-size: 16px;
-            margin-top: 8px;
-        }
+    .swing {
+      background-color: #f1c40f;
+      color: black;
+    }
 
-        p {
-            margin: 4px;
-            font-size: 13px;
-        }
+    .take {
+      background-color: #7f8c8d;
+      color: white;
+    }
 
-        @media (max-width: 768px) {
-            .logo-container img {
-                max-width: 70px;
-                width: 25vw;
-            }
+    #submitBtn {
+      background-color: #1abc9c;
+      color: white;
+      font-weight: bold;
+      padding: 12px 20px;
+      font-size: 16px;
+      margin-top: 8px;
+    }
 
-            .responsive-embed {
-                padding-bottom: 55%;
-                width: 90vw;
-            }
+    p {
+      margin: 4px;
+      font-size: 13px;
+    }
 
-            button {
-                font-size: 13px;
-                padding: 6px 10px;
-            }
+    @media (max-width: 768px) {
+      .logo-container img {
+        max-width: 60px;
+        width: 24vw;
+      }
 
-            #submitBtn {
-                font-size: 15px;
-                padding: 10px 16px;
-            }
+      .responsive-embed {
+        padding-bottom: 55%;
+        width: 90vw;
+      }
 
-            .scoreboard {
-                font-size: 12px;
-            }
-        }
-    </style>
+      button {
+        font-size: 13px;
+        padding: 6px 10px;
+      }
 
-    <!-- Sound FX -->
-    <audio id="rightSound" src="{{ url_for('static', filename='sounds/cash.mp3') }}"></audio>
-    <audio id="wrongSound" src="{{ url_for('static', filename='sounds/buzzer.mp3') }}"></audio>
+      #submitBtn {
+        font-size: 15px;
+        padding: 10px 16px;
+      }
 
-    <script>
-        function setPitch(pitch) {
-            document.getElementById("pitch_guess").value = pitch;
-            document.getElementById("pitchLabel").innerText = "Pitch Selected: " + pitch;
-        }
+      .scoreboard {
+        font-size: 12px;
+      }
+    }
+  </style>
 
-        function setDecision(decision) {
-            document.getElementById("swing_take").value = decision;
-            document.getElementById("decisionLabel").innerText = "Decision: " + decision;
-        }
+  <!-- Sound FX -->
+  <audio id="rightSound" src="{{ url_for('static', filename='sounds/cash.mp3') }}"></audio>
+  <audio id="wrongSound" src="{{ url_for('static', filename='sounds/buzzer.mp3') }}"></audio>
 
-        document.addEventListener('DOMContentLoaded', function () {
-            setTimeout(() => {
-                const iframe = document.getElementById('pitchVideo');
-                iframe.style.pointerEvents = "none";
-            }, 4500);
-        });
-    </script>
+  <script>
+    function setPitch(pitch) {
+      document.getElementById('pitch_guess').value = pitch;
+      document.getElementById('pitchLabel').innerText = 'Pitch Selected: ' + pitch;
+    }
+
+    function setDecision(decision) {
+      document.getElementById('swing_take').value = decision;
+      document.getElementById('decisionLabel').innerText = 'Decision: ' + decision;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(() => {
+        const iframe = document.getElementById('pitchVideo');
+        iframe.style.pointerEvents = 'none';
+      }, 4500);
+    });
+  </script>
 </head>
 <body>
+  <header>Pitch Recognition Trainer by FM</header>
 
-    <header>Pitch Recognition Trainer by FM</header>
+  <div class="scoreboard">
+    Score: {{ score }}/{{ total }}<br />
+    Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
+  </div>
 
-    <div class="scoreboard">
-        Score: {{ score }}/{{ total }}<br>
-        Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
+  <div class="main-content">
+    <div class="logo-container">
+      <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo" />
     </div>
 
-    <div class="main-area">
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo">
-        </div>
-
-        <div class="responsive-embed">
-            <iframe id="pitchVideo" src="{{ pitch['embed_url'] }}" allowfullscreen></iframe>
-        </div>
-
-        <form action="/result" method="POST" class="centered-section">
-            <input type="hidden" id="pitch_guess" name="pitch_guess">
-            <input type="hidden" id="swing_take" name="swing_take">
-            <input type="hidden" name="correct_pitch" value="{{ pitch['pitch_type'] }}">
-            <input type="hidden" name="ball_or_strike" value="{{ pitch['ball_or_strike'] }}">
-
-            <h3>What pitch was it?</h3>
-            <div class="button-row">
-                <button type="button" class="fastball" onclick="setPitch('Fastball')">Fastball</button>
-                <button type="button" class="changeup" onclick="setPitch('Changeup')">Changeup</button>
-                <button type="button" class="slider" onclick="setPitch('Slider')">Slider</button>
-                <button type="button" class="curveball" onclick="setPitch('Curveball')">Curveball</button>
-            </div>
-            <p id="pitchLabel"></p>
-
-            <h3>Swing or Take?</h3>
-            <div class="button-row">
-                <button type="button" class="swing" onclick="setDecision('Swing')">Swing</button>
-                <button type="button" class="take" onclick="setDecision('Take')">Take</button>
-            </div>
-            <p id="decisionLabel"></p>
-
-            <button type="submit" id="submitBtn">Submit Guess</button>
-        </form>
+    <div class="responsive-embed">
+      <iframe id="pitchVideo" src="{{ pitch['embed_url'] }}" allowfullscreen></iframe>
     </div>
 
+    <form action="/result" method="POST" class="centered-section">
+      <input type="hidden" id="pitch_guess" name="pitch_guess" />
+      <input type="hidden" id="swing_take" name="swing_take" />
+      <input type="hidden" name="correct_pitch" value="{{ pitch['pitch_type'] }}" />
+      <input type="hidden" name="ball_or_strike" value="{{ pitch['ball_or_strike'] }}" />
+
+      <h3>What pitch was it?</h3>
+      <div class="button-row">
+        <button type="button" class="fastball" onclick="setPitch('Fastball')">Fastball</button>
+        <button type="button" class="changeup" onclick="setPitch('Changeup')">Changeup</button>
+        <button type="button" class="slider" onclick="setPitch('Slider')">Slider</button>
+        <button type="button" class="curveball" onclick="setPitch('Curveball')">Curveball</button>
+      </div>
+      <p id="pitchLabel"></p>
+
+      <h3>Swing or Take?</h3>
+      <div class="button-row">
+        <button type="button" class="swing" onclick="setDecision('Swing')">Swing</button>
+        <button type="button" class="take" onclick="setDecision('Take')">Take</button>
+      </div>
+      <p id="decisionLabel"></p>
+
+      <button type="submit" id="submitBtn">Submit Guess</button>
+    </form>
+  </div>
 </body>
 </html>
