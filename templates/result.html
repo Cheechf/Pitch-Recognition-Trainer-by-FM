@@ -5,9 +5,7 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -19,23 +17,24 @@
             align-items: center;
             justify-content: start;
             min-height: 100vh;
-            overflow-x: hidden;
             text-align: center;
+            padding-top: 90px;
         }
 
         header {
             width: 100%;
             padding: 15px;
             background-color: #222;
-            text-align: center;
             font-size: 26px;
             font-weight: bold;
             letter-spacing: 1px;
             border-bottom: 2px solid #333;
             position: fixed;
             top: 0;
+            left: 0;
             color: #1abc9c;
             z-index: 10;
+            text-align: center;
         }
 
         .scoreboard {
@@ -58,12 +57,12 @@
         }
 
         .logo-result {
-            margin-top: 80px;
+            margin-top: 10px;
             margin-bottom: 10px;
         }
 
         .logo-result img {
-            width: 260px;
+            width: 240px;
             height: auto;
         }
 
@@ -76,8 +75,8 @@
         }
 
         h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
+            font-size: 42px;
+            margin-bottom: 15px;
         }
 
         .thumbs {
@@ -86,8 +85,8 @@
         }
 
         .info {
-            font-size: 20px;
-            margin-bottom: 10px;
+            font-size: 18px;
+            margin-bottom: 8px;
         }
 
         .next-btn {
@@ -105,6 +104,12 @@
         .next-btn:hover {
             background-color: #16a085;
         }
+
+        .game-info {
+            margin-top: 25px;
+            font-size: 16px;
+            color: #1abc9c;
+        }
     </style>
 </head>
 <body onload="playSound()">
@@ -116,7 +121,6 @@
         Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
     </div>
 
-    <!-- FM Logo Above Result -->
     <div class="logo-result">
         <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo">
     </div>
@@ -135,6 +139,17 @@
         <div class="info">Pitch Type: <strong>{{ correct_pitch }}</strong></div>
         <div class="info">It was a <strong>{{ correct_zone }}</strong></div>
         <div class="info">You guessed: <strong>{{ user_guess }}</strong> | <strong>{{ user_decision }}</strong></div>
+
+        {% if mode == "game" %}
+            {% if hit_type %}
+                <div class="info"><strong>HIT:</strong> {{ hit_type }}</div>
+            {% endif %}
+            <div class="game-info">
+                Inning: {{ inning }} | Outs: {{ outs }}<br>
+                Count: {{ balls }}-{{ strikes }}<br>
+                Runs: {{ runs }}
+            </div>
+        {% endif %}
 
         <form action="/pitch">
             <button class="next-btn">See Next Pitch</button>
