@@ -28,22 +28,23 @@
             text-align: center;
             font-size: 26px;
             font-weight: bold;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             border-bottom: 2px solid #333;
+            color: #1abc9c;
         }
 
         .logo-container {
             position: absolute;
             top: 100px;
-            left: 5%;
+            left: 30px;
             z-index: 1;
         }
 
         .logo-container img {
-            max-width: 180px;
+            max-width: 220px;
             width: 100%;
             height: auto;
-            opacity: 0.15;
+            opacity: 1;
         }
 
         .video-wrapper {
@@ -136,6 +137,19 @@
         p {
             margin: 4px;
         }
+
+        .mid-logo {
+            margin-top: 40px;
+            margin-bottom: -20px;
+        }
+
+        .mid-logo img {
+            max-width: 220px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 
     <!-- Sound FX -->
@@ -164,7 +178,7 @@
 </head>
 <body>
 
-    <header><span style="font-family: 'Orbitron', sans-serif; font-size: 28px; color: #1abc9c; letter-spacing: 1.5px;">Pitch Recognition Trainer by FM</span></header>
+    <header>Pitch Recognition Trainer by FM</header>
 
     <div class="scoreboard">
         Score: {{ score }}/{{ total }}<br>
