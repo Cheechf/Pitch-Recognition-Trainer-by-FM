@@ -1,8 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-import json
-import random
-import os
-import time
+import json, random, os, time
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'
@@ -24,27 +21,19 @@ def pitch():
 
     if mode == "game" and "inning" not in session:
         session.update({
-            "inning": 1,
-            "outs": 0,
-            "balls": 0,
-            "strikes": 0,
-            "runs": 0,
-            "runners": [False, False, False],
-            "hits": 0,
-            "outs_total": 0,
-            "at_bats": 0
+            "inning": 1, "outs": 0, "balls": 0, "strikes": 0,
+            "runs": 0, "runners": [False, False, False],
+            "hits": 0, "outs_total": 0, "at_bats": 0
         })
 
     if mode == "leaderboard" and session.get("total", 0) >= 10 and session.get("streak", 0) < 3:
         return redirect(url_for('summary'))
 
-    selected_pitch = random.choice(pitch_data)
-    session["selected_pitch"] = selected_pitch
+    session["selected_pitch"] = random.choice(pitch_data)
     session["start_time"] = time.time()
 
-    return render_template(
-        "pitch.html",
-        pitch=selected_pitch,
+    return render_template("pitch.html",
+        pitch=session["selected_pitch"],
         score=session.get("score", 0),
         total=session.get("total", 0),
         streak=session.get("streak", 0),
@@ -74,64 +63,40 @@ def result():
 
     hit_type = None
     if mode == "game":
-        inning = session.get("inning", 1)
-        outs = session.get("outs", 0)
-        balls = session.get("balls", 0)
-        strikes = session.get("strikes", 0)
-        runners = session.get("runners", [False, False, False])
-        runs = session.get("runs", 0)
-        hits = session.get("hits", 0)
-        outs_total = session.get("outs_total", 0)
-        at_bats = session.get("at_bats", 0)
+        inning = session["inning"]
+        outs = session["outs"]
+        balls = session["balls"]
+        strikes = session["strikes"]
+        runners = session["runners"]
+        runs = session["runs"]
+        hits = session["hits"]
+        outs_total = session["outs_total"]
+        at_bats = session["at_bats"] + 1
 
-        at_bats += 1
-
-        if user_decision == "Take":
-            if correct_zone == "Ball":
-                balls += 1
-                if balls >= 4:
-                    runners, runs = advance_runners(runners, 1, runs)
-                    balls = 0
-                    strikes = 0
+        if correct_guess and correct_swing and user_decision == "Swing":
+            if reaction_time <= 0.5:
+                hit_type = "Home Run"
+                runners, runs = advance_runners(runners, 4, runs)
+            elif reaction_time <= 1.0:
+                hit_type = "Triple"
+                runners, runs = advance_runners(runners, 3, runs)
+            elif reaction_time <= 1.5:
+                hit_type = "Double"
+                runners, runs = advance_runners(runners, 2, runs)
+            elif reaction_time <= 2.0:
+                hit_type = "Single"
+                runners, runs = advance_runners(runners, 1, runs)
             else:
                 strikes += 1
-
-        elif user_decision == "Swing":
-            if correct_zone == "Strike":
-                if correct_guess:
-                    if reaction_time <= 0.5:
-                        hit_type = "Home Run"
-                        runners, runs = advance_runners(runners, 4, runs)
-                        hits += 1
-                        balls = 0
-                        strikes = 0
-                    elif reaction_time <= 1.0:
-                        hit_type = "Triple"
-                        runners, runs = advance_runners(runners, 3, runs)
-                        hits += 1
-                        balls = 0
-                        strikes = 0
-                    elif reaction_time <= 1.5:
-                        hit_type = "Double"
-                        runners, runs = advance_runners(runners, 2, runs)
-                        hits += 1
-                        balls = 0
-                        strikes = 0
-                    elif reaction_time <= 2.0:
-                        hit_type = "Single"
-                        runners, runs = advance_runners(runners, 1, runs)
-                        hits += 1
-                        balls = 0
-                        strikes = 0
-                    else:
-                        strikes += 1
-                else:
-                    # foul ball
-                    if strikes < 1:
-                        strikes += 1
-            else:
-                # swing at a ball = strike
+            hits += 1
+            balls = 0
+            strikes = 0
+        elif correct_swing and not correct_guess:
+            # foul ball
+            if strikes < 1:
                 strikes += 1
+        else:
+            strikes += 1
 
         if strikes >= 2:
             outs += 1
@@ -147,12 +112,8 @@ def result():
             runners = [False, False, False]
 
         if inning > 7:
-            session.update({
-                "hits": hits,
-                "outs_total": outs_total,
-                "at_bats": at_bats
-            })
-            return redirect(url_for('game_summary'))
+            session.update({"hits": hits, "outs_total": outs_total, "at_bats": at_bats})
+            return redirect(url_for("game_summary"))
 
         session.update({
             "inning": inning,
@@ -166,7 +127,7 @@ def result():
             "at_bats": at_bats
         })
 
-    if mode != "game":
+    elif mode != "game":
         if is_correct:
             session["score"] += 1
             session["streak"] += 1
@@ -176,8 +137,7 @@ def result():
     session.pop("selected_pitch", None)
     session.pop("start_time", None)
 
-    return render_template(
-        "result.html",
+    return render_template("result.html",
         correct_pitch=correct_pitch,
         user_guess=user_guess,
         correct_zone=correct_zone,
@@ -201,26 +161,24 @@ def advance_runners(runners, bases, runs):
     new_runners = [False, False, False]
     scoring = 0
     if bases == 4:
-        scoring += sum(runners) + 1
-    else:
-        for i in reversed(range(3)):
-            if runners[i]:
-                if i + bases >= 3:
-                    scoring += 1
-                else:
-                    new_runners[i + bases] = True
-        if bases < 4:
-            new_runners[bases - 1] = True
+        return [False, False, False], runs + sum(runners) + 1
+    for i in reversed(range(3)):
+        if runners[i]:
+            if i + bases >= 3:
+                scoring += 1
+            else:
+                new_runners[i + bases] = True
+    if bases < 4:
+        new_runners[bases - 1] = True
     return new_runners, runs + scoring
 
 @app.route('/summary')
 def summary():
-    score = session.get('score', 0)
-    total = session.get('total', 1)
+    score = session.get("score", 0)
+    total = session.get("total", 1)
     avg = round(score / total, 3)
     avg_str = "{:.3f}".format(avg)[1:]
-    return render_template(
-        'summary.html',
+    return render_template("summary.html",
         score=score,
         total=total,
         avg=avg,
@@ -238,41 +196,41 @@ def game_summary():
     avg = "{:.3f}".format(hits / total_at_bats)[1:]
     return render_template("final_scoreboard.html", runs=runs, outs_total=outs, hits=hits, avg=avg)
 
-@app.route('/submit_score', methods=['POST'])
+@app.route('/submit_score', methods=["POST"])
 def submit_score():
-    name = request.form['name']
-    score = session.get('score', 0)
-    total = session.get('total', 1)
+    name = request.form["name"]
+    score = session.get("score", 0)
+    total = session.get("total", 1)
     avg = round(score / total, 3)
 
     entry = {"name": name, "score": score, "total": total, "avg": avg}
 
     if os.path.exists(LEADERBOARD_FILE):
-        with open(LEADERBOARD_FILE, 'r') as f:
+        with open(LEADERBOARD_FILE, "r") as f:
             leaderboard = json.load(f)
     else:
         leaderboard = []
 
     leaderboard.append(entry)
-    leaderboard.sort(key=lambda x: x['avg'], reverse=True)
+    leaderboard.sort(key=lambda x: x["avg"], reverse=True)
 
-    with open(LEADERBOARD_FILE, 'w') as f:
+    with open(LEADERBOARD_FILE, "w") as f:
         json.dump(leaderboard, f, indent=4)
 
-    return redirect(url_for('leaderboard'))
+    return redirect(url_for("leaderboard"))
 
 @app.route('/leaderboard')
 def leaderboard():
     if os.path.exists(LEADERBOARD_FILE):
-        with open(LEADERBOARD_FILE, 'r') as f:
+        with open(LEADERBOARD_FILE, "r") as f:
             raw_board = json.load(f)
     else:
         raw_board = []
 
     for entry in raw_board:
-        entry['avg_str'] = "{:.3f}".format(entry['avg'])[1:]
+        entry["avg_str"] = "{:.3f}".format(entry["avg"])[1:]
 
-    return render_template('leaderboard.html', leaderboard=raw_board)
+    return render_template("leaderboard.html", leaderboard=raw_board)
 
 if __name__ == '__main__':
     app.run(debug=True)
