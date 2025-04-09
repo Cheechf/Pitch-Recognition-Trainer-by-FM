@@ -53,13 +53,42 @@
 
         .title {
             font-size: 48px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             text-shadow: 0 0 12px #1abc9c;
         }
 
+        .mode-select {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .mode-select button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #333;
+            color: white;
+            border: 2px solid #1abc9c;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mode-select button.active {
+            background-color: #1abc9c;
+            color: #111;
+            font-weight: bold;
+        }
+
+        .mode-select button:hover {
+            background-color: #16a085;
+            transform: scale(1.03);
+        }
+
         .start-btn {
-            padding: 18px 36px;
-            font-size: 20px;
+            padding: 16px 36px;
+            font-size: 18px;
             font-weight: bold;
             background-color: #1abc9c;
             border: none;
@@ -69,7 +98,12 @@
             transition: all 0.2s ease;
         }
 
-        .start-btn:hover {
+        .start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .start-btn:hover:enabled {
             background-color: #16a085;
             transform: scale(1.05);
         }
@@ -83,13 +117,31 @@
         <div class="center-content">
             <img src="{{ url_for('static', filename='images/fm-logo.png') }}" alt="FM Logo" class="logo-img">
             <div class="title">Pitch Recognition Trainer by FM</div>
-            <form action="/pitch">
-                <button class="start-btn">Start At-Bat</button>
+
+            <form action="/pitch" method="GET">
+                <input type="hidden" name="mode" id="selectedMode" value="">
+                <div class="mode-select">
+                    <button type="button" onclick="selectMode(this, 'leaderboard')">15-Pitch Leaderboard</button>
+                    <button type="button" onclick="selectMode(this, 'unlimited')">Unlimited Mode</button>
+                    <button type="button" onclick="selectMode(this, 'game')">7-Inning Mini Game</button>
+                </div>
+                <button class="start-btn" id="startBtn" disabled>Start At-Bat</button>
             </form>
         </div>
 
         <img src="{{ url_for('static', filename='images/player2.png') }}" class="player-img" alt="Player 2">
     </div>
+
+    <script>
+        function selectMode(button, modeValue) {
+            const buttons = document.querySelectorAll('.mode-select button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            button.classList.add('active');
+            document.getElementById('selectedMode').value = modeValue;
+            document.getElementById('startBtn').disabled = false;
+        }
+    </script>
 
 </body>
 </html>
