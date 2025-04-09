@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pitch Trainer by FM</title>
+    <title>Pitch Recognition Trainer by FM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
     <style>
         body {
@@ -25,11 +25,11 @@
             border-bottom: 2px solid #333;
         }
 
-        video {
+        iframe {
             width: 100%;
             max-height: 45vh;
-            object-fit: contain;
             margin-bottom: 10px;
+            border: none;
         }
 
         .scoreboard {
@@ -129,10 +129,8 @@
         Streak: {{ streak }} {% if streak >= 3 %}<span class="fire-emoji">🔥</span>{% endif %}
     </div>
 
-    <!-- Pitch Video -->
-    <video autoplay muted>
-        <source src="{{ url_for('static', filename='videos/' + pitch['video']) }}" type="video/mp4">
-    </video>
+    <!-- Embedded Google Drive Video -->
+    <iframe id="pitchVideo" src="{{ pitch['embed_url'] }}" allowfullscreen></iframe>
 
     <!-- Pitch Guess Form -->
     <form action="/result" method="POST" class="centered-section">
