@@ -207,6 +207,8 @@
     {% if mode == "game" %}
       {% if hit_type %}
         <div class="info"><strong>HIT:</strong> {{ hit_type }}</div>
+      {% elif foul_ball %}
+        <div class="info"><strong>Foul Ball</strong></div>
       {% endif %}
 
       <div class="diamond-wrapper">
