@@ -7,7 +7,6 @@ import time
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'
 
-# Load pitch data from JSON
 with open('pitches.json') as f:
     pitch_data = json.load(f)
 
@@ -23,20 +22,22 @@ def pitch():
     mode = request.args.get("mode") or session.get("mode", "leaderboard")
     session["mode"] = mode
 
-    # Game Mode Setup
     if mode == "game" and "inning" not in session:
-        session["inning"] = 1
-        session["outs"] = 0
-        session["balls"] = 0
-        session["strikes"] = 0
-        session["runs"] = 0
-        session["runners"] = [False, False, False]  # 1B, 2B, 3B
+        session.update({
+            "inning": 1,
+            "outs": 0,
+            "balls": 0,
+            "strikes": 0,
+            "runs": 0,
+            "runners": [False, False, False],
+            "hits": 0,
+            "outs_total": 0,
+            "at_bats": 0
+        })
 
-    # Leaderboard End Check
     if mode == "leaderboard" and session.get("total", 0) >= 10 and session.get("streak", 0) < 3:
         return redirect(url_for('summary'))
 
-    # Pick new pitch
     selected_pitch = random.choice(pitch_data)
     session["selected_pitch"] = selected_pitch
     session["start_time"] = time.time()
@@ -58,10 +59,7 @@ def result():
     correct_zone = request.form['ball_or_strike']
     mode = session.get("mode", "leaderboard")
 
-    # Calculate reaction time
     reaction_time = round(time.time() - session.get("start_time", time.time()), 3)
-
-    # Outcome Logic
     correct_guess = user_guess == correct_pitch
     correct_swing = (
         (user_decision == "Swing" and correct_zone == "Strike") or
@@ -69,14 +67,11 @@ def result():
     )
     is_correct = correct_guess and correct_swing
 
-    # Default scoring
     session["score"] = session.get("score", 0)
     session["total"] = session.get("total", 0)
     session["streak"] = session.get("streak", 0)
-
     session["total"] += 1
 
-    # ======= GAME MODE LOGIC =======
     hit_type = None
     if mode == "game":
         inning = session.get("inning", 1)
@@ -85,51 +80,55 @@ def result():
         strikes = session.get("strikes", 0)
         runners = session.get("runners", [False, False, False])
         runs = session.get("runs", 0)
+        hits = session.get("hits", 0)
+        outs_total = session.get("outs_total", 0)
+        at_bats = session.get("at_bats", 0)
 
-        # Take: ball or strike
+        at_bats += 1
+
         if user_decision == "Take":
             if correct_zone == "Ball":
                 balls += 1
                 if balls >= 4:
-                    # Walk: move runners
                     runners, runs = advance_runners(runners, 1, runs)
                     balls = 0
                     strikes = 0
             else:
                 strikes += 1
-        # Swing:
+
         elif user_decision == "Swing":
             if correct_zone == "Strike":
                 if correct_guess:
-                    # Reaction hit:
                     if reaction_time <= 0.5:
                         hit_type = "Home Run"
                         runners, runs = advance_runners(runners, 4, runs)
+                        hits += 1
                     elif reaction_time <= 1.0:
                         hit_type = "Triple"
                         runners, runs = advance_runners(runners, 3, runs)
+                        hits += 1
                     elif reaction_time <= 1.5:
                         hit_type = "Double"
                         runners, runs = advance_runners(runners, 2, runs)
+                        hits += 1
                     elif reaction_time <= 2.0:
                         hit_type = "Single"
                         runners, runs = advance_runners(runners, 1, runs)
+                        hits += 1
                     else:
                         strikes += 1
                 else:
-                    # Foul ball
                     if strikes < 1:
                         strikes += 1
             else:
                 strikes += 1
 
-        # Handle outs
         if strikes >= 2:
             outs += 1
+            outs_total += 1
             balls = 0
             strikes = 0
 
-        # Next inning
         if outs >= 2:
             inning += 1
             outs = 0
@@ -137,21 +136,26 @@ def result():
             strikes = 0
             runners = [False, False, False]
 
-        # Game over check
         if inning > 7:
-            return redirect(url_for('summary'))
+            session.update({
+                "hits": hits,
+                "outs_total": outs_total,
+                "at_bats": at_bats
+            })
+            return redirect(url_for('game_summary'))
 
-        # Save updated game state
         session.update({
             "inning": inning,
             "outs": outs,
             "balls": balls,
             "strikes": strikes,
             "runs": runs,
-            "runners": runners
+            "runners": runners,
+            "hits": hits,
+            "outs_total": outs_total,
+            "at_bats": at_bats
         })
 
-    # ======= NON-GAME MODE SCORING =======
     if mode != "game":
         if is_correct:
             session["score"] += 1
@@ -187,7 +191,7 @@ def advance_runners(runners, bases, runs):
     new_runners = [False, False, False]
     scoring = 0
     if bases == 4:
-        scoring += sum(runners) + 1  # Home run scores everyone + batter
+        scoring += sum(runners) + 1
     else:
         for i in reversed(range(3)):
             if runners[i]:
@@ -214,6 +218,15 @@ def summary():
         mode=session.get("mode", "leaderboard"),
         runs=session.get("runs", 0)
     )
+
+@app.route('/game_summary')
+def game_summary():
+    runs = session.get("runs", 0)
+    outs = session.get("outs_total", 0)
+    hits = session.get("hits", 0)
+    total_at_bats = session.get("at_bats", 1)
+    avg = "{:.3f}".format(hits / total_at_bats)[1:]
+    return render_template("final_scoreboard.html", runs=runs, outs_total=outs, hits=hits, avg=avg)
 
 @app.route('/submit_score', methods=['POST'])
 def submit_score():
